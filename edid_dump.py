@@ -14,26 +14,26 @@ class CEDIDDump(object):
 		super(CEDIDDump, self).__init__()
 		self.fileName = fileName
 
-	def format_block(self, blockCnt, bin_array):
-		print "format block %d start" % blockCnt
+	def format_block(self, blockIdx, item_array):
+		print "format block %d start" % blockIdx
 		print "       00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F"
-		print "       --------------------Block %d--------------------" % blockCnt
+		print "       --------------------Block %d--------------------" % blockIdx
 
 		for row in range(0, 8):
 			print "  %d0| " % row,
-			for colum in range (0, 16):
-				print "%-2x" % bin_array[row*16+colum],
+			for column in range (0, 16):
+				print "%-2x" % item_array[row*16+column],
 			print ""
 
 	def do_format(self):
-		bin_array = self.read_file(128)
-		if self.check_edid_valid(bin_array[:8]) != True:
+		item_array = self.read_file(128)
+		if self.check_edid_valid(item_array[:8]) != True:
 			print "not vaild edid"
 			pass
 
-		self.format_block(0, bin_array)
-		bin_array = self.read_file(128)
-		self.format_block(1, bin_array)
+		self.format_block(0, item_array)
+		item_array = self.read_file(128)
+		self.format_block(1, item_array)
 
 	def format(self):
 		self.open_file()
@@ -44,25 +44,25 @@ class CEDIDDump(object):
 		self.file_handle = open(self.fileName, 'rb')
 
 	def read_file(self, len):
-		bin_array = []
+		item_array = []
 		for i in range(0, len):
-			bin_array.append(struct.unpack("B",self.file_handle.read(1))[0])
+			item_array.append(struct.unpack("B",self.file_handle.read(1))[0])
 
-		return bin_array
+		return item_array
 
 	def close_file(self):
 		self.file_handle.close();
 
-	def check_edid_valid(self, bin_array):
-		if len(bin_array) != 8:
+	def check_edid_valid(self, item_array):
+		if len(item_array) != 8:
 			print "invalid edid header, return!"
 			return False
 
-		if 0 == bin_array[0] and 0 == bin_array[7]:
+		if 0 == item_array[0] and 0 == item_array[7]:
 			print "invalid magic code"
 			return False
 
-		for item in bin_array[1:7]:
+		for item in item_array[1:7]:
 			if hex(item) != 0xFF:
 				print "invalid magic code"
 				return False
