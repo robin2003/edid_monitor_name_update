@@ -5,8 +5,7 @@ import os
 import struct
 
 class CEDIDDump(object):
-	""" format edid bin
-		read bin file example
+	""" dump edid bin
 		author: xxpyb@126.com
 		date  : 2016.4.27
 	"""
