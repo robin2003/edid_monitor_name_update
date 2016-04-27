@@ -28,6 +28,10 @@ class CEDIDDump(object):
 
 	def do_format(self):
 		bin_array = self.read_file(128)
+		if self.check_edid_valid(bin_array[:8]) != True:
+			print "not vaild edid"
+			pass
+
 		self.format_block(0, bin_array)
 		bin_array = self.read_file(128)
 		self.format_block(1, bin_array)
@@ -49,6 +53,25 @@ class CEDIDDump(object):
 
 	def close_file(self):
 		self.file_handle.close();
+
+	def check_edid_valid(self, bin_array):
+		if len(bin_array) != 8:
+			print "invalid edid header, return!"
+			return False
+
+		if 0 == bin_array[0] and 0 == bin_array[7]:
+			print "invalid magic code"
+			return False
+
+		for item in bin_array[1:7]:
+			if hex(item) != 0xFF:
+				print "invalid magic code"
+				return False
+
+		return True
+
+
+
 
 
 if __name__ == "__main__":
