@@ -31,7 +31,7 @@ class CEDIDDump(object):
 		item_array = self.read_file(128)
 		if self.check_edid_valid(item_array[:8]) != True:
 			print "not vaild edid"
-			pass
+			return
 
 		self.format_block(0, item_array)
 		item_array = self.read_file(128)
@@ -60,13 +60,13 @@ class CEDIDDump(object):
 			print "invalid edid header, return!"
 			return False
 
-		if 0 == item_array[0] and 0 == item_array[7]:
-			print "invalid magic code"
+		if 0 != item_array[0] or 0 != item_array[7]:
+			print "invalid magic code!"
 			return False
 
 		for item in item_array[1:7]:
-			if hex(item) != 0xFF:
-				print "invalid magic code"
+			if item != 255:
+				print "invalid magic code!!"
 				return False
 
 		return True
