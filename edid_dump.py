@@ -9,9 +9,11 @@ class CEDIDDump(object):
 		author: xxpyb@126.com
 		date  : 2016.4.27
 	"""
-	def __init__(self, fileName):
-		print fileName
+	def __init__(self):
 		super(CEDIDDump, self).__init__()
+
+	def set_file_name(self, fileName):
+		print fileName
 		self.fileName = fileName
 
 	def format_block(self, blockIdx, item_array):
@@ -25,7 +27,7 @@ class CEDIDDump(object):
 				print "%-2x" % item_array[row*16+column],
 			print ""
 
-	def do_format(self):
+	def do_dump(self):
 		item_array = self.read_file(128)
 		if self.check_edid_valid(item_array[:8]) != True:
 			print "not vaild edid"
@@ -35,9 +37,9 @@ class CEDIDDump(object):
 		item_array = self.read_file(128)
 		self.format_block(1, item_array)
 
-	def format(self):
+	def dump(self):
 		self.open_file()
-		self.do_format()
+		self.do_dump()
 		self.close_file()
 
 	def open_file(self):
@@ -69,15 +71,12 @@ class CEDIDDump(object):
 
 		return True
 
-
-
-
-
 if __name__ == "__main__":
 	if 0 == len(sys.argv):
 		print "no param! usage: edid_dump.py fileName"
 		pass
 
+	edidDump = CEDIDDump()
 	for fileName in sys.argv[1:]:
-		edidFormat = CEDIDDump(fileName)
-		edidFormat.format()
+		edidDump.set_file_name(fileName)
+		edidDump.dump()
