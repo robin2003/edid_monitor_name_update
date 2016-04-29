@@ -13,7 +13,7 @@ class CEDIDDump(object):
 		super(CEDIDDump, self).__init__()
 
 	def set_file_name(self, fileName):
-		print fileName
+		print "file name:" + fileName
 		self.fileName = fileName
 
 	def format_block(self, blockIdx, item_array):
@@ -38,12 +38,20 @@ class CEDIDDump(object):
 		self.format_block(1, item_array)
 
 	def dump(self):
-		self.open_file()
+		if self.open_file() != True :
+#			print "open file error!"
+			return
+
 		self.do_dump()
 		self.close_file()
 
 	def open_file(self):
+		if os.path.exists(self.fileName) != True:
+			print "file not exists"
+			return False
+
 		self.file_handle = open(self.fileName, 'rb')
+		return True
 
 	def read_file(self, len):
 		item_array = []
@@ -72,11 +80,10 @@ class CEDIDDump(object):
 		return True
 
 if __name__ == "__main__":
-	if 0 == len(sys.argv):
-		print "no param! usage: edid_dump.py fileName"
-		pass
-
-	edidDump = CEDIDDump()
-	for fileName in sys.argv[1:]:
-		edidDump.set_file_name(fileName)
-		edidDump.dump()
+	if 0 == len(sys.argv[1:]):
+		print "no param! usage: edid_dump.py fileName1 fileName2"
+	else:
+		edidDump = CEDIDDump()
+		for fileName in sys.argv[1:]:
+			edidDump.set_file_name(fileName)
+			edidDump.dump()
